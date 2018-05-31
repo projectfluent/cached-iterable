@@ -1,7 +1,10 @@
 # cached-iterable
 
-`cached-iterable` exposes the `CachedItearble` class which implements the
-[iterable protocol][].
+`cached-iterable` exposes two classes which implement the [iterable
+protocol][]:
+
+  - `CachedSyncIterable`,
+  - `CachedAsyncIterable`.
 
 You can wrap any iterable in these classes to create a new iterable which
 caches the yielded elements. This is useful for iterating over an iterable many
@@ -21,7 +24,7 @@ can install it from the npm registry or use it as a standalone script (as the
 
 ```js
 import assert from "assert";
-import {CachedIterable} from "cached-iterable";
+import {CachedSyncIterable} from "cached-iterable";
 
 function * countdown(i) {
     while (i--) {
@@ -29,7 +32,7 @@ function * countdown(i) {
     }
 }
 
-let numbers = new CachedIterable(countdown(3));
+let numbers = new CachedSyncIterable(countdown(3));
 
 // `numbers` can be iterated over multiple times.
 assert.deepEqual([...numbers], [3, 2, 1, 0]);
@@ -42,7 +45,7 @@ For legacy browsers, the `compat` build has been transpiled using Babel's [env
 preset][]. It requires the regenerator runtime provided by [babel-polyfill][].
 
 ```javascript
-import {CachedIterable} from 'cached-iterable/compat';
+import {CachedSyncIterable} from 'cached-iterable/compat';
 ```
 
 [env preset]: https://babeljs.io/docs/plugins/preset-env/
