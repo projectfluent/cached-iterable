@@ -241,5 +241,21 @@ suite("CachedAsyncIterable", function() {
             }
             assert.deepEqual(values, [o1, o2]);
         });
+
+        test("returns the most recent {value, done} object", async function() {
+            const iterable = new CachedAsyncIterable([o1, o2]);
+            assert.deepEqual(
+                await iterable.touchNext(),
+                {value: o1, done: false});
+            assert.deepEqual(
+                await iterable.touchNext(),
+                {value: o2, done: false});
+            assert.deepEqual(
+                await iterable.touchNext(),
+                {value: undefined, done: true});
+            assert.deepEqual(
+                await iterable.touchNext(),
+                {value: undefined, done: true});
+        });
     });
 });
