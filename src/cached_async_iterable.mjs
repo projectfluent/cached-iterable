@@ -23,6 +23,34 @@ export default class CachedAsyncIterable {
         this.seen = [];
     }
 
+    /**
+     * Synchronous iterator over the cached elements.
+     *
+     * Return a generator object implementing the iterator protocol over the
+     * cached elements of the original (async or sync) iterable.
+     */
+    [Symbol.iterator]() {
+        const {seen} = this;
+        let cur = 0;
+
+        return {
+            next() {
+                if (seen.length === cur) {
+                    return {value: undefined, done: true};
+                }
+                return seen[cur++];
+            }
+        };
+    }
+
+    /**
+     * Asynchronous iterator caching the yielded elements.
+     *
+     * Elements yielded by the original iterable will be cached and available
+     * synchronously. Returns an async generator object implementing the
+     * iterator protocol over the elements of the original (async or sync)
+     * iterable.
+     */
     [Symbol.asyncIterator]() {
         const { seen, iterator } = this;
         let cur = 0;
