@@ -49,5 +49,8 @@ export default class CachedSyncIterable {
                 seen.push(iterator.next());
             }
         }
+        // Return the last cached {value, done} object to allow the calling
+        // code to decide if it needs to call touchNext again.
+        return seen[seen.length - 1];
     }
 }

@@ -55,6 +55,75 @@ suite("CachedAsyncIterable", function() {
         });
     });
 
+    suite("sync iteration over cached elements", function(){
+        let o1, o2;
+
+        suiteSetup(function() {
+            o1 = Object();
+            o2 = Object();
+        });
+
+        test("sync iterable with no cached elements yet", function() {
+            function *generate() {
+                yield *[o1, o2];
+            }
+
+            const iterable = new CachedAsyncIterable(generate());
+            assert.deepEqual([...iterable], []);
+        });
+
+        test("sync iterable with a few elements cached so far", async function() {
+            function *generate() {
+                yield *[o1, o2];
+            }
+
+            const iterable = new CachedAsyncIterable(generate());
+            await iterable.touchNext();
+            assert.deepEqual([...iterable], [o1]);
+        });
+
+        test("iterable with all cached elements", async function() {
+            function *generate() {
+                yield *[o1, o2];
+            }
+
+            const iterable = new CachedAsyncIterable(generate());
+            await iterable.touchNext();
+            await iterable.touchNext();
+            assert.deepEqual([...iterable], [o1, o2]);
+        });
+
+        test("async iterable with no cached elements yet", async function() {
+            async function *generate() {
+                yield *[o1, o2];
+            }
+
+            const iterable = new CachedAsyncIterable(generate());
+            assert.deepEqual([...iterable], []);
+        });
+
+        test("async iterable with a few elements cached so far", async function() {
+            async function *generate() {
+                yield *[o1, o2];
+            }
+
+            const iterable = new CachedAsyncIterable(generate());
+            await iterable.touchNext();
+            assert.deepEqual([...iterable], [o1]);
+        });
+
+        test("async iterable with all cached elements", async function() {
+            async function *generate() {
+                yield *[o1, o2];
+            }
+
+            const iterable = new CachedAsyncIterable(generate());
+            await iterable.touchNext();
+            await iterable.touchNext();
+            assert.deepEqual([...iterable], [o1, o2]);
+        });
+    });
+
     suite("async iteration", function(){
         let o1, o2;
 
@@ -171,6 +240,22 @@ suite("CachedAsyncIterable", function() {
                 values.push(elem);
             }
             assert.deepEqual(values, [o1, o2]);
+        });
+
+        test("returns the most recent {value, done} object", async function() {
+            const iterable = new CachedAsyncIterable([o1, o2]);
+            assert.deepEqual(
+                await iterable.touchNext(),
+                {value: o1, done: false});
+            assert.deepEqual(
+                await iterable.touchNext(),
+                {value: o2, done: false});
+            assert.deepEqual(
+                await iterable.touchNext(),
+                {value: undefined, done: true});
+            assert.deepEqual(
+                await iterable.touchNext(),
+                {value: undefined, done: true});
         });
     });
 });

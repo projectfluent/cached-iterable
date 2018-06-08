@@ -137,5 +137,21 @@ suite("CachedSyncIterable", function() {
             iterable.touchNext();
             assert.deepEqual([...iterable], [o1, o2]);
         });
+
+        test("returns the most recent {value, done} object", function() {
+            const iterable = new CachedSyncIterable([o1, o2]);
+            assert.deepEqual(
+                iterable.touchNext(),
+                {value: o1, done: false});
+            assert.deepEqual(
+                iterable.touchNext(),
+                {value: o2, done: false});
+            assert.deepEqual(
+                iterable.touchNext(),
+                {value: undefined, done: true});
+            assert.deepEqual(
+                iterable.touchNext(),
+                {value: undefined, done: true});
+        });
     });
 });
