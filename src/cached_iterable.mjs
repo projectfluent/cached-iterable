@@ -1,17 +1,7 @@
 /*
  * Base CachedIterable class.
  */
-export default class CachedIterable {
-    /**
-     * Create an `CachedIterable` instance.
-     *
-     * @param {Iterable} iterable
-     * @returns {CachedIterable}
-     */
-    constructor() {
-        this.seen = [];
-    }
-
+export default class CachedIterable extends Array {
     /**
      * Create a `CachedIterable` instance from an iterable or, if another
      * instance of `CachedIterable` is passed, return it without any

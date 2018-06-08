@@ -24,15 +24,15 @@ export default class CachedSyncIterable extends CachedIterable {
     }
 
     [Symbol.iterator]() {
-        const { seen, iterator } = this;
+        const cached = this;
         let cur = 0;
 
         return {
             next() {
-                if (seen.length <= cur) {
-                    seen.push(iterator.next());
+                if (cached.length <= cur) {
+                    cached.push(cached.iterator.next());
                 }
-                return seen[cur++];
+                return cached[cur++];
             }
         };
     }
@@ -44,15 +44,14 @@ export default class CachedSyncIterable extends CachedIterable {
      * @param {number} count - number of elements to consume
      */
     touchNext(count = 1) {
-        const { seen, iterator } = this;
         let idx = 0;
         while (idx++ < count) {
-            if (seen.length === 0 || seen[seen.length - 1].done === false) {
-                seen.push(iterator.next());
+            if (this.length === 0 || this[this.length - 1].done === false) {
+                this.push(this.iterator.next());
             }
         }
         // Return the last cached {value, done} object to allow the calling
         // code to decide if it needs to call touchNext again.
-        return seen[seen.length - 1];
+        return this[this.length - 1];
     }
 }
