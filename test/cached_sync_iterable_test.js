@@ -40,6 +40,19 @@ suite("CachedSyncIterable", function() {
         });
     });
 
+    suite("from()", function() {
+        test("pass any iterable", function() {
+            const iterable = CachedSyncIterable.from([1, 2]);
+            assert.deepEqual([...iterable], [1, 2]);
+        });
+
+        test("pass another CachedSyncIterable", function() {
+            const iterable1 = new CachedSyncIterable([1, 2]);
+            const iterable2 = CachedSyncIterable.from(iterable1);
+            assert.equal(iterable1, iterable2);
+        });
+    });
+
     suite("sync iteration", function(){
         let o1, o2;
 
@@ -93,22 +106,22 @@ suite("CachedSyncIterable", function() {
 
         test("consumes an element into the cache", function() {
             const iterable = new CachedSyncIterable([o1, o2]);
-            assert.equal(iterable.seen.length, 0);
+            assert.equal(iterable.length, 0);
             iterable.touchNext();
-            assert.equal(iterable.seen.length, 1);
+            assert.equal(iterable.length, 1);
         });
 
         test("allows to consume multiple elements into the cache", function() {
             const iterable = new CachedSyncIterable([o1, o2]);
             iterable.touchNext();
             iterable.touchNext();
-            assert.equal(iterable.seen.length, 2);
+            assert.equal(iterable.length, 2);
         });
 
         test("allows to consume multiple elements at once", function() {
             const iterable = new CachedSyncIterable([o1, o2]);
             iterable.touchNext(2);
-            assert.equal(iterable.seen.length, 2);
+            assert.equal(iterable.length, 2);
         });
 
         test("stops at the last element", function() {
@@ -116,10 +129,10 @@ suite("CachedSyncIterable", function() {
             iterable.touchNext();
             iterable.touchNext();
             iterable.touchNext();
-            assert.equal(iterable.seen.length, 3);
+            assert.equal(iterable.length, 3);
 
             iterable.touchNext();
-            assert.equal(iterable.seen.length, 3);
+            assert.equal(iterable.length, 3);
         });
 
         test("works on an empty iterable", function() {
@@ -127,7 +140,7 @@ suite("CachedSyncIterable", function() {
             iterable.touchNext();
             iterable.touchNext();
             iterable.touchNext();
-            assert.equal(iterable.seen.length, 1);
+            assert.equal(iterable.length, 1);
         });
 
         test("iteration for such cache works", function() {

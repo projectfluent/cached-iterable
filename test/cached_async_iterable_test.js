@@ -55,6 +55,22 @@ suite("CachedAsyncIterable", function() {
         });
     });
 
+    suite("from()", function() {
+        test("pass any iterable", async function() {
+            const iterable = CachedAsyncIterable.from([1, 2]);
+            // No cached elements yet.
+            assert.deepEqual([...iterable], []);
+            // Deplete the original iterable.
+            assert.deepEqual(await toArray(iterable), [1, 2]);
+        });
+
+        test("pass another CachedAsyncIterable", function() {
+            const iterable1 = new CachedAsyncIterable([1, 2]);
+            const iterable2 = CachedAsyncIterable.from(iterable1);
+            assert.equal(iterable1, iterable2);
+        });
+    });
+
     suite("sync iteration over cached elements", function(){
         let o1, o2;
 
@@ -170,22 +186,22 @@ suite("CachedAsyncIterable", function() {
 
         test("consumes an element into the cache", async function() {
             const iterable = new CachedAsyncIterable(generateMessages());
-            assert.equal(iterable.seen.length, 0);
+            assert.equal(iterable.length, 0);
             await iterable.touchNext();
-            assert.equal(iterable.seen.length, 1);
+            assert.equal(iterable.length, 1);
         });
 
         test("allows to consume multiple elements into the cache", async function() {
             const iterable = new CachedAsyncIterable(generateMessages());
             await iterable.touchNext();
             await iterable.touchNext();
-            assert.equal(iterable.seen.length, 2);
+            assert.equal(iterable.length, 2);
         });
 
         test("allows to consume multiple elements at once", async function() {
             const iterable = new CachedAsyncIterable(generateMessages());
             await iterable.touchNext(2);
-            assert.equal(iterable.seen.length, 2);
+            assert.equal(iterable.length, 2);
         });
 
         test("stops at the last element", async function() {
@@ -193,10 +209,10 @@ suite("CachedAsyncIterable", function() {
             await iterable.touchNext();
             await iterable.touchNext();
             await iterable.touchNext();
-            assert.equal(iterable.seen.length, 3);
+            assert.equal(iterable.length, 3);
 
             await iterable.touchNext();
-            assert.equal(iterable.seen.length, 3);
+            assert.equal(iterable.length, 3);
         });
 
         test("works on an empty iterable", async function() {
@@ -207,7 +223,7 @@ suite("CachedAsyncIterable", function() {
             await iterable.touchNext();
             await iterable.touchNext();
             await iterable.touchNext();
-            assert.equal(iterable.seen.length, 1);
+            assert.equal(iterable.length, 1);
         });
 
         test("iteration for such cache works", async function() {
