@@ -76,9 +76,11 @@ export default class CachedAsyncIterable extends CachedIterable {
     async touchNext(count = 1) {
         let idx = 0;
         while (idx++ < count) {
-            if (this.length === 0 || this[this.length - 1].done === false) {
-                this.push(await this.iterator.next());
+            const last = this[this.length - 1];
+            if (last && last.done) {
+                break;
             }
+            this.push(await this.iterator.next());
         }
         // Return the last cached {value, done} object to allow the calling
         // code to decide if it needs to call touchNext again.

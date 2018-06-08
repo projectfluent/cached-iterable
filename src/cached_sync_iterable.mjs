@@ -46,9 +46,11 @@ export default class CachedSyncIterable extends CachedIterable {
     touchNext(count = 1) {
         let idx = 0;
         while (idx++ < count) {
-            if (this.length === 0 || this[this.length - 1].done === false) {
-                this.push(this.iterator.next());
+            const last = this[this.length - 1];
+            if (last && last.done) {
+                break;
             }
+            this.push(this.iterator.next());
         }
         // Return the last cached {value, done} object to allow the calling
         // code to decide if it needs to call touchNext again.
