@@ -40,6 +40,19 @@ suite("CachedSyncIterable", function() {
         });
     });
 
+    suite("from()", function() {
+        test("pass any iterable", function() {
+            const iterable = CachedSyncIterable.from([1, 2]);
+            assert.deepEqual([...iterable], [1, 2]);
+        });
+
+        test("pass another CachedSyncIterable", function() {
+            const iterable1 = new CachedSyncIterable([1, 2]);
+            const iterable2 = CachedSyncIterable.from(iterable1);
+            assert.equal(iterable1, iterable2);
+        });
+    });
+
     suite("sync iteration", function(){
         let o1, o2;
 

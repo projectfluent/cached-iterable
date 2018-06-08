@@ -55,6 +55,22 @@ suite("CachedAsyncIterable", function() {
         });
     });
 
+    suite("from()", function() {
+        test("pass any iterable", async function() {
+            const iterable = CachedAsyncIterable.from([1, 2]);
+            // No cached elements yet.
+            assert.deepEqual([...iterable], []);
+            // Deplete the original iterable.
+            assert.deepEqual(await toArray(iterable), [1, 2]);
+        });
+
+        test("pass another CachedAsyncIterable", function() {
+            const iterable1 = new CachedAsyncIterable([1, 2]);
+            const iterable2 = CachedAsyncIterable.from(iterable1);
+            assert.equal(iterable1, iterable2);
+        });
+    });
+
     suite("sync iteration over cached elements", function(){
         let o1, o2;
 

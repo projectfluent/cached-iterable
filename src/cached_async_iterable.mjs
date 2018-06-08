@@ -1,10 +1,12 @@
+import CachedIterable from "./cached_iterable.mjs";
+
 /*
  * CachedAsyncIterable caches the elements yielded by an async iterable.
  *
  * It can be used to iterate over an iterable many times without depleting the
  * iterable.
  */
-export default class CachedAsyncIterable {
+export default class CachedAsyncIterable extends CachedIterable {
     /**
      * Create an `CachedAsyncIterable` instance.
      *
@@ -12,6 +14,8 @@ export default class CachedAsyncIterable {
      * @returns {CachedAsyncIterable}
      */
     constructor(iterable) {
+        super();
+
         if (Symbol.asyncIterator in Object(iterable)) {
             this.iterator = iterable[Symbol.asyncIterator]();
         } else if (Symbol.iterator in Object(iterable)) {
@@ -19,8 +23,6 @@ export default class CachedAsyncIterable {
         } else {
             throw new TypeError("Argument must implement the iteration protocol.");
         }
-
-        this.seen = [];
     }
 
     /**

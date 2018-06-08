@@ -1,10 +1,12 @@
+import CachedIterable from "./cached_iterable.mjs";
+
 /*
  * CachedSyncIterable caches the elements yielded by an iterable.
  *
  * It can be used to iterate over an iterable many times without depleting the
  * iterable.
  */
-export default class CachedSyncIterable {
+export default class CachedSyncIterable extends CachedIterable {
     /**
      * Create an `CachedSyncIterable` instance.
      *
@@ -12,13 +14,13 @@ export default class CachedSyncIterable {
      * @returns {CachedSyncIterable}
      */
     constructor(iterable) {
+        super();
+
         if (Symbol.iterator in Object(iterable)) {
             this.iterator = iterable[Symbol.iterator]();
         } else {
             throw new TypeError("Argument must implement the iteration protocol.");
         }
-
-        this.seen = [];
     }
 
     [Symbol.iterator]() {
