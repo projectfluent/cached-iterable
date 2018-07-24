@@ -17,8 +17,8 @@
   "directories": {
     "lib": "./src"
   },
-  "main": "./cached-iterable.js",
-  "module": "./src/index.js",
+  "main": "./index.js",
+  "module": "./src/index.mjs",
   "repository": {
     "type": "git",
     "url": "https://github.com/projectfluent/cached-iterable.git"

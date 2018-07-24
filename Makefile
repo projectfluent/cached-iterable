@@ -22,9 +22,9 @@ test:
 	    --require mocha_config \
 	    test/**/*_test.js
 
-build: $(PACKAGE).js compat.js
+build: index.js compat.js
 
-$(PACKAGE).js: $(SOURCES)
+index.js: $(SOURCES)
 	@rollup $(CURDIR)/src/index.mjs \
 	    --config $(CURDIR)/bundle_config.js \
 	    --banner "/* $(PACKAGE)@$(VERSION) */" \
@@ -43,5 +43,5 @@ compat.js: $(SOURCES)
 	@echo -e " $(OK) $@ built"
 
 clean:
-	@rm -f $(PACKAGE).js compat.js
+	@rm -f index.js compat.js
 	@echo -e " $(OK) clean"
