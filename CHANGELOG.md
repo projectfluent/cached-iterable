@@ -1,5 +1,11 @@
 # Changelog
 
+## cached-iterable 0.2.1
+
+  - Fix `package.json`'s `module` field.
+
+    It now correctly points to `src/index.mjs`.
+
 ## cached-iterable 0.2.0
 
   - Add `CachedSyncIterable` and `CachedAsyncIterable`.
