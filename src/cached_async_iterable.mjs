@@ -60,9 +60,9 @@ export default class CachedAsyncIterable extends CachedIterable {
         return {
             async next() {
                 if (cached.length <= cur) {
-                    cached.push(await cached.iterator.next());
+                    cached.push(cached.iterator.next());
                 }
-                return cached[cur++];
+                return await cached[cur++];
             }
         };
     }

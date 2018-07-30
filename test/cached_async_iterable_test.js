@@ -170,6 +170,26 @@ suite("CachedAsyncIterable", function() {
             const first = await toArray(iterable);
             assert.deepEqual(await toArray(iterable), first);
         });
+
+        test("lazy iterable can be called multiple times in parallel", async function() {
+            let counter = 0;
+
+            async function *generate() {
+              while (true) {
+                counter++;
+                yield await Promise.resolve();
+              }
+            }
+
+            // We're testing that if the first call to asyncIterator has been
+            // made, but the value of it has not been returned yet,
+            // the consequitive call returns the same Promise rather than,
+            // attempting to fetch the next item from the iterator.
+            const iterable = new CachedAsyncIterable(generate());
+            iterable[Symbol.asyncIterator]().next();
+            await iterable[Symbol.asyncIterator]().next();
+            assert.equal(counter, 1);
+        });
     });
 
     suite("async touchNext", function(){
