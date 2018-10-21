@@ -1,5 +1,9 @@
 # Changelog
 
+## cached-iterable 0.3.0
+
+  - Ensure that if the CachedAsyncIterable is called multiple times in parallel, it does return the correct value
+
 ## cached-iterable 0.2.1
 
   - Fix `package.json`'s `module` field.
